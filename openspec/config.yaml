@@ -1,0 +1,67 @@
+schema: spec-driven
+strict_tdd: true
+
+context: |
+  jjdlr-dots is a new open-source, personal dotfiles project for building a
+  reproducible, modular, portable, and maintainable workstation environment.
+  Fedora Linux is the MVP platform. Windows (Windows Terminal, PowerShell,
+  and/or WSL) and macOS are future targets. The intended architecture is a
+  modular monolith managed with chezmoi, with clear core, shell, terminal,
+  multiplexer, monitoring, git, devtools, and profile boundaries.
+
+  The initial toolset is zsh, Starship, Zellij, Kitty, btop, fastfetch, eza,
+  bat, fd, ripgrep, fzf, zoxide, lazygit, and mise. Documentation and readable,
+  explainable automation are first-class requirements. The repository must not
+  contain secrets or blindly copied third-party dotfiles.
+
+  The repository is currently documentation-only: README.md and the existing
+  architecture and Git-flow documents are empty, and no implementation,
+  package manifest, or automated test runner has been configured.
+
+testing:
+  runner: not-configured
+  commands: []
+  notes: >-
+    No executable code or test framework exists yet. Select and document the
+    appropriate runner when the first implementation change is proposed; all
+    implementation must then follow strict test-driven development.
+
+rules:
+  init:
+    - Initialize only project-level SDD context; do not create change artifacts.
+  explore:
+    - Keep exploration read-only and separate from proposal work.
+  proposal:
+    - Scope changes as small, understandable milestones, with Fedora first.
+    - State verification and rollback considerations for installation changes.
+  specs:
+    - >-
+      Express behavior and acceptance criteria without prescribing hidden
+      implementation details.
+    - >-
+      Include portability, idempotency, and secret-safety requirements where
+      relevant.
+  design:
+    - >-
+      Preserve the modular-monolith architecture and explicit module
+      responsibilities.
+    - >-
+      Explain tool and architecture decisions so the repository remains
+      educational.
+  tasks:
+    - Order implementation tasks test-first under strict TDD.
+    - Keep each task reviewable within the configured 500-line review budget.
+  apply:
+    - >-
+      Write a failing test or automated check before implementation whenever
+      executable behavior changes.
+    - >-
+      Do not broaden Fedora MVP scope to Windows or macOS without an approved
+      change.
+  verify:
+    - Run all configured checks and report any manual verification explicitly.
+    - >-
+      Verify that no credentials, machine-specific secrets, or private data
+      are committed.
+  archive:
+    - Archive only after requirements and verification evidence are complete.
