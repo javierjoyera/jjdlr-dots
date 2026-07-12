@@ -32,7 +32,7 @@ The final persisted tasks re-read confirmed no unchecked implementation task mar
 - Tasks: all 43 complete; unchecked implementation task lines: none.
 - Artifact store: `openspec`.
 - Structured status: `archive_ready`; apply, verify, and sync complete; archive ready.
-- Action context: `repo-local`; workspace root and allowed edit root are `/home/jjdelarubia/Workspace/OpenSource/jjdlr-dots`.
+- Action context: `repo-local`; workspace root and allowed edit root are `<workspace-root>`.
 - Warning: relevant files remain untracked relative to `HEAD`; this is traceability-only and did not block archival.
 
 ## Archived path

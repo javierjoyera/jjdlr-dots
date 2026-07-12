@@ -64,9 +64,9 @@ applyState: all_done
 dependencies: apply=all_done, verify=all_done, sync=ready, archive=blocked
 actionContext:
   mode: repo-local
-  workspaceRoot: /home/jjdelarubia/Workspace/OpenSource/jjdlr-dots
+  workspaceRoot: <workspace-root>
   allowedEditRoots:
-    - /home/jjdelarubia/Workspace/OpenSource/jjdlr-dots
+    - <workspace-root>
   warnings:
     - Relevant files are untracked relative to HEAD; verification identified this as a traceability warning.
 nextRecommended: sync
