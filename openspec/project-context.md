@@ -6,10 +6,10 @@
 
 ## Scope and roadmap
 
-- **MVP platform:** Fedora Linux.
-- **Future platforms:** a conservative enterprise Windows setup using Windows Terminal, PowerShell, and/or WSL; macOS later.
-- **Initial milestones:** establish the repository structure, README and architecture documentation; add a basic Fedora installer; then introduce the `core` and `shell` modules followed by Starship, Zellij, btop, and fastfetch configuration.
-- **Deferred ideas:** broader modules and profiles, tmux support, a possible Go CLI, and a `doctor` command.
+- **First verified platform:** macOS.
+- **First planned implementation slice:** minimal chezmoi source state and application flow with Starship configuration on macOS.
+- **Future platforms:** Linux and Windows, introduced through later approved changes while preserving portable ownership boundaries.
+- **Deferred ideas:** broader modules and profiles, package installation, additional terminal tools, tmux support, a possible Go CLI, and a `doctor` command.
 
 Work should proceed in small, reviewable milestones rather than generating the complete environment at once.
 
@@ -26,7 +26,7 @@ Use a **modular monolith**: one repository with explicit responsibility boundari
 - `devtools`: mise, runtime tooling, and development helpers.
 - `profiles`: platform and context overlays such as Fedora, Windows, macOS, work, and personal.
 
-`chezmoi` is the intended dotfiles manager. The Fedora MVP toolset is zsh, Starship, Zellij, Kitty, btop, fastfetch, eza, bat, fd, ripgrep, fzf, zoxide, lazygit, and mise.
+`chezmoi` is the selected dotfile management and application layer. Its first use should remain minimal: establish only the source state and behavior required for the macOS-first Starship slice. Additional tools belong to later changes rather than the initial implementation.
 
 ## Engineering principles
 
@@ -36,23 +36,25 @@ Use a **modular monolith**: one repository with explicit responsibility boundari
 - Prefer practical behavior over appearance, while still providing a polished terminal.
 - Treat documentation as a first-class deliverable and explain decisions.
 - Do not copy third-party dotfiles without understanding and adapting them.
-- Implement Fedora first; add other platforms only through later scoped changes.
+- Verify macOS first; add Linux and Windows only through later scoped changes.
 - Use strict test-driven development once executable behavior is introduced.
 
 ## Current repository state
 
-As of 2026-07-10, the repository contains an MIT license, an empty README, empty architecture and Git-flow documents, and local SDD runtime metadata. There is no implementation, dependency manifest, package/build system, or automated test runner yet. Git is initialized and points to an existing remote; the active branch is `docs/project-information` based on `main`.
+As of 2026-07-22, the repository contains an MIT license, repository documentation, archived foundation SDD artifacts, and a GitHub Actions check that runs `scripts/check-local-paths.sh`. There is no managed chezmoi source state, Starship configuration, dependency manifest, package/build system, automated test runner, coverage tool, linter, type checker, or formatter. The current branch is `main`.
 
-Testing infrastructure must be selected and documented with the first executable implementation. Until then, verification is limited to artifact/schema checks and repository inspection.
+Strict TDD remains project policy, but it is not yet executable because no test runner exists. The first implementation proposal must select suitable automated checks before implementation. Until then, verification is limited to repository inspection, artifact/schema checks, shell syntax validation, and the local-path safety check.
+
+The repository-facing README, architecture decisions, and merged foundation specification still describe Fedora-first sequencing. They are preserved as historical/current artifacts during initialization and must be reconciled through the next approved SDD change rather than rewritten out of phase.
 
 ## SDD operating constraints
 
 - Current workflow mode is interactive: complete one SDD phase at a time.
 - The artifact store is OpenSpec.
-- The review budget is 500 changed lines.
-- Chained pull requests require asking the user each time.
+- The review budget is 800 changed lines.
+- Use a single pull request by default; split only when reviewability or cohesion requires it.
 - Initialization must not create explore, proposal, spec, design, task, or implementation artifacts.
 
 ## Source
 
-Synthesized in English from `.context/objetivo.md`; that Spanish source remains the authoritative statement of the user's initial intent.
+Updated from the repository state and the user-approved macOS-first, minimal-chezmoi direction. Technical artifacts remain in English.

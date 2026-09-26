@@ -1,0 +1,23 @@
+# jjdlr-dots Ghostty configuration
+#
+# This file is intentionally portable: it contains visual and terminal
+# behavior only. Ghostty installation, shell setup, and macOS preferences
+# remain outside this repository.
+
+font-family = MesloLGS Nerd Font Mono
+font-size = 14
+
+theme = Catppuccin Mocha
+
+background-opacity = 1
+background-blur-radius = 0
+
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+scrollback-limit = 10000
+
+window-padding-x = 12
+window-padding-y = 12
+window-inherit-working-directory = true
