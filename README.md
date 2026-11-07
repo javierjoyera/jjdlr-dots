@@ -1,32 +1,65 @@
 # jjdlr-dots
 
-`jjdlr-dots` is a learning-oriented project for building a reproducible, modular, and maintainable personal workstation environment. **Current status:** this repository is a documentation foundation only; it has no supported installer and no working dotfiles yet.
+A minimal [Starship](https://starship.rs/guide/) prompt: only the input indicator,
+without a username, hostname, directory, or extra modules. No shell framework.
 
-## Direction at a glance
+## Install
 
-| Status | Direction |
-| --- | --- |
-| **Current** | Documentation that records the intended architecture and its decisions. |
-| **Planned** | Fedora Linux is the first implementation target. |
-| **Future** | Windows/WSL and macOS need separate approved changes before implementation. |
+Clone or download this repository, open its directory, then run:
 
-The planned Fedora tool ecosystem is roadmap context, not installed or configured capability: zsh and Starship for the shell experience; Kitty and Zellij for terminal work; btop and fastfetch for inspection; and Git, lazygit, mise, eza, bat, fd, ripgrep, fzf, and zoxide for daily development.
+| System | Command | Prerequisite | Shell configured |
+| --- | --- | --- | --- |
+| macOS | `sh install.sh` | [Homebrew](https://brew.sh), unless Starship is installed | Zsh |
+| Linux | `sh install.sh` | `curl`, unless Starship is installed | Bash |
+| Windows | `.\install.ps1` | [WinGet](https://aka.ms/getwinget), unless Starship is installed | The PowerShell edition running the script |
 
-## Read the foundation
+Open a **new terminal** afterward. On Windows, close and reopen the terminal
+application so it receives the updated PATH. Windows PowerShell and PowerShell 7
+have separate profiles: run the script in the one you use.
 
-| Document | What it answers |
-| --- | --- |
-| [Architecture](docs/architecture.md) | How the planned modular-monolith boundaries, platform sequence, and future layout fit together. |
-| [Decisions](docs/decisions.md) | Why this milestone is documentation-first and which tradeoffs guide later work. |
+If Windows blocks a downloaded script, inspect it before using
+`Unblock-File .\install.ps1`. This does not override execution policy; if policy
+still prohibits scripts, follow your organization's policy rather than bypassing it.
 
-## Roadmap
+## What changes
 
-1. **Current:** document the project purpose, ownership boundaries, and decisions.
-2. **Next:** propose a separate Fedora installer milestone.
-3. **Future:** add configuration and additional platform support only through approved changes.
+- `config/starship.toml` is copied to `$HOME/.config/starship.toml`.
+  An existing `STARSHIP_CONFIG` environment variable selects that destination instead.
+- An identical config is kept. A different one stops installation with
+  `Existing Starship config differs; nothing changed.`
+  Keep or back up your existing config yourself before choosing to replace it.
+- The appropriate initialization line is appended to `.zshrc`, `.bashrc`, or
+  PowerShell's `$PROFILE`; existing contents are not replaced. Zsh honors `ZDOTDIR`.
+- Linux also adds `$HOME/.local/bin` to PATH in `.bashrc`. A login Bash session
+  must source `.bashrc` from its login profile, as most distributions already do.
+- Running the installer again does not duplicate its exact initialization lines.
+  It does not remove or migrate other prompt customizations.
 
-There are intentionally no installation or package commands in this repository yet.
+If Starship is missing, macOS uses `brew install starship`; Windows uses
+`winget install --id Starship.Starship --exact --source winget`. Linux downloads
+and executes the official HTTPS installer from `https://starship.rs/install.sh`,
+installing into `$HOME/.local/bin` without sudo. These commands require network
+access and trust the upstream distribution. Existing Starship installations are
+not upgraded.
 
-## Contribute safely
+Missing prerequisites, incomplete checkouts, unsupported Unix systems, and
+non-file profiles stop with an explanatory error. A failed Starship installation
+stops before copying the config or editing the profile; the external installer
+may still have made changes of its own.
 
-Keep changes focused, readable, and accurate about **Current**, **Planned**, and **Future** capability. This is a public repository: never commit credentials, tokens, private host details, employer information, personal machine paths, or other machine-specific secrets. Use generic examples and preserve the documented ownership boundaries when implementation begins.
+## Keep it public-safe
+
+Commit only the portable configuration and scripts. Do not copy your personal
+shell profiles, credentials, machine names, or absolute local paths into this
+repository. Home and profile paths are resolved on the machine running the script.
+
+## Checks
+
+Run `python3 -B tests/test_install.py`. Tests use temporary homes and fake package
+managers, never install software or change your real shell profile. PowerShell
+checks require `pwsh` and are skipped when it is unavailable. Simulated package
+manager tests do not replace a native installation check on each target system.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
