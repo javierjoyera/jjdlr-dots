@@ -3,6 +3,13 @@
 set -eu
 
 fail() { printf '%s\n' "$1" >&2; exit 1; }
+update=false
+for arg in "$@"; do
+    case "$arg" in
+        --update) update=true ;;
+        *) fail "Unknown argument: $arg. Usage: sh install.sh [--update]" ;;
+    esac
+done
 root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 source_config="$root/config/starship.toml"
 config=${STARSHIP_CONFIG:-"$HOME/.config/starship.toml"}
@@ -14,12 +21,23 @@ case "$(uname -s)" in
 esac
 
 [ -f "$source_config" ] || fail "Missing config/starship.toml; run from a complete checkout."
+replace_config=false
 if [ -e "$config" ] || [ -L "$config" ]; then
-    cmp -s "$source_config" "$config" ||
-        fail "Existing Starship config differs; nothing changed."
+    if ! cmp -s "$source_config" "$config"; then
+        [ "$update" = true ] ||
+            fail "Existing Starship config differs; nothing changed. Re-run with --update to replace it and keep a backup."
+        replace_config=true
+    fi
 fi
 if [ -e "$profile" ] && [ ! -f "$profile" ]; then
     fail "Shell profile is not a regular file; nothing changed."
+fi
+if [ "$replace_config" = true ]; then
+    backup="$config.bak-$(date -u +%Y%m%dT%H%M%SZ)"
+    if [ ! -f "$config" ] || [ -e "$backup" ] || [ -L "$backup" ] ||
+        ! cp "$config" "$backup" 2>/dev/null; then
+        fail "Could not back up the existing config; nothing changed."
+    fi
 fi
 
 if ! command -v starship >/dev/null 2>&1; then
@@ -39,7 +57,7 @@ if ! command -v starship >/dev/null 2>&1; then
 fi
 
 mkdir -p "$(dirname -- "$config")" "$(dirname -- "$profile")"
-if [ ! -e "$config" ]; then
+if [ "$replace_config" = true ] || [ ! -e "$config" ]; then
     cp "$source_config" "$config"
 fi
 append_once() {
