@@ -1,4 +1,6 @@
 # Run from the PowerShell edition you use; its $PROFILE is configured.
+param([switch]$Update)
+
 $ErrorActionPreference = 'Stop'
 
 try {
@@ -11,16 +13,33 @@ try {
     if (-not (Test-Path -LiteralPath $sourceConfig -PathType Leaf)) {
         throw 'Missing config/starship.toml; run from a complete checkout.'
     }
+    $replaceConfig = $false
     if (Test-Path -LiteralPath $config) {
         if (-not (Test-Path -LiteralPath $config -PathType Leaf) -or
             (Get-FileHash -LiteralPath $config).Hash -ne
             (Get-FileHash -LiteralPath $sourceConfig).Hash) {
-            throw 'Existing Starship config differs; nothing changed.'
+            if (-not $Update) {
+                throw 'Existing Starship config differs; nothing changed. Re-run with -Update to replace it and keep a backup.'
+            }
+            $replaceConfig = $true
         }
     }
     if ((Test-Path -LiteralPath $PROFILE) -and
         -not (Test-Path -LiteralPath $PROFILE -PathType Leaf)) {
         throw 'Shell profile is not a regular file; nothing changed.'
+    }
+
+    if ($replaceConfig) {
+        $backup = $config + '.bak-' + [DateTime]::UtcNow.ToString("yyyyMMddTHHmmssZ")
+        try {
+            if (-not (Test-Path -LiteralPath $config -PathType Leaf) -or
+                (Test-Path -LiteralPath $backup)) {
+                throw 'Backup destination exists or config is not a file.'
+            }
+            Copy-Item -LiteralPath $config -Destination $backup
+        } catch {
+            throw 'Could not back up the existing config; nothing changed.'
+        }
     }
 
     if (-not (Get-Command starship -ErrorAction SilentlyContinue)) {
@@ -33,7 +52,7 @@ try {
 
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $config) | Out-Null
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $PROFILE) | Out-Null
-    if (-not (Test-Path -LiteralPath $config)) {
+    if ($replaceConfig -or -not (Test-Path -LiteralPath $config)) {
         Copy-Item -LiteralPath $sourceConfig -Destination $config
     }
     $lines = if (Test-Path -LiteralPath $PROFILE) {

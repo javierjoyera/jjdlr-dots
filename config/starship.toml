@@ -1,2 +1,22 @@
-format = "$character"
+format = "$directory$git_branch$git_commit$git_status$character"
 add_newline = false
+
+[directory]
+format = "[$path]($style) "
+style = "bold #89b4fa"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+format = "on [$branch]($style) "
+style = "italic #cba6f7"
+truncation_length = 24
+truncation_symbol = "…"
+
+[git_commit]
+format = "at [$hash]($style) "
+style = "bold #94e2d5"
+
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold #f9e2af"
